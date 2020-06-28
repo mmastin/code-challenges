@@ -75,4 +75,44 @@ def buy_and_sell_stock_once(prices):
         min_price_so_far = min(min_price_so_far, price)
     return max_profit
 
-    
+
+def generate_primes(n: int) -> List[int]:
+    primes = []
+    # is_prime represents if p is prime or not
+    # initially set each to true, expecting 0 and 1
+    # then use sieving to eliminate non-primes
+    for p in range(2, n + 1):
+        if is_prime[p]:
+            primes.append(p)
+            # sieve p's multiples
+            for i in range(p * 2, n + 1, p):
+                is_prime[i] = False
+    return primes
+
+
+def apply_permutation(perm: List[int], A: List[int]) -> None:
+    for i in range(len(A)):
+        while perm[i] != i:
+            A[perm[i]], A[i] = A[i], A[perm[i]]
+            perm[perm[i]], perm[i] = perm[i], perm[perm[i]]
+
+
+def random_sampling(k, A):
+    for i in range(k):
+        r = random.randint(i, len(A) - 1)
+        A[i], A[r] = A[r], A[i]
+
+
+def compute_random_permutation(n: int) -> List[int]:
+    permutation = list(range(n))
+    random_sampling(n, permutation)
+    return permutation
+
+
+def generate_pascal_triangle(n: int) -> List[List[int]]:
+    result = [[1] * (i + 1) for i in range(n)]
+    for i in range(n):
+        for j in range(1, i):
+            # sets this entry to the sum of the two above entries
+            result[i][j] = result[i - 1][j - 1] + result(i - 1)[j]
+    return result
