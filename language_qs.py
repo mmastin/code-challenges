@@ -98,4 +98,55 @@ class ColSumCsvParseException(Exception):
 def get_col_sum(filename, col):
     # may raise IOError, will propagate to caller
     csv_file = open(filename)
-    
+    csv_reader = csv.reader(csv_file)
+    running_sum = line_number = 0
+    try:
+        for row in csv_reader:
+            if col >= len(row):
+                raise IndexError('not enough entries in row ' + str(row))
+            value = row[col]
+            # will skip rows for which the corresponding columns can't
+            # be parsed to an int, logging the fact
+            try:
+                running_sum += int(value)
+            except ValueError:
+                print('cannot convert ' + value + 'to int, ignoring')
+            line_number += 1
+    except csv.Error:
+        # program should raise exceptions appropriate to their level of
+        # abstraction, so we propagate the csv.Error upwards as a 
+        # ColSumCsvParseException
+        print('in csv.Error handler')
+        raise ColSumCsvParseException('error processing csv', line_number)
+    else:
+        print('sum = ' + str(running_sum))
+    finally:
+        # ensure there is no resource leak
+        csv_file.close()
+        return running_sum
+
+
+# Scoping
+x, y, z = 'global-x', 'global-y', 'global-z'
+
+def basic_scoping():
+    print(x) # global x
+    y = 'local-y'
+    global z
+    z = 'local-z'
+
+def inner_outer_scoping():
+    def inner1():
+        print(x) # outer-x
+
+    def inner2():
+        x = 'inner2-x'
+        print(x) # inner2-x
+
+    def inner3():
+        nonlocal x
+        x = 'inner3-x'
+        print(x) # inner3-x
+
+    x = 'outer-x'
+    # inner1(), inner2(), inner3()
