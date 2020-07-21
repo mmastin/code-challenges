@@ -4,6 +4,7 @@ def gcd(x: int, y: int) -> int:
 
 # tower of hanoi
 
+# hanoi tower problem
 NUM_PEGS = 3
 def compute_tower_hanoi(num_rings:int) -> List[List[int]]:
     def computer_tower_hanoi_steps(num_rings_to_move, from_peg,
